@@ -55,9 +55,12 @@ public class KonumKaydetme {
         //either you specify app--> //path/to/app.apk
         //or if app is already installed, you need to specify appActivity and appPackage
         //this info you can find in the internet, at work - ask to developers
-        String fullPath = System.getProperty("user.dir")+"/src/test/resources/hepsiburada-5-4-2.apk";
-        System.out.println("fullPath = " + fullPath);
-        desiredCapabilities.setCapability("app", fullPath);
+//        String fullPath = System.getProperty("user.dir")+"/src/test/resources/hepsiburada-5-4-2.apk";
+//        System.out.println("fullPath = " + fullPath);
+//        desiredCapabilities.setCapability("app", fullPath);
+        desiredCapabilities.setCapability("appPackage", "com.pozitron.hepsiburada");
+        desiredCapabilities.setCapability("appActivity", "com.hepsiburada.ui.startup.SplashActivity");
+
         System.out.println("app was invoked!");
 
         desiredCapabilities.setCapability(MobileCapabilityType.AUTOMATION_NAME,"UiAutomator2");
@@ -186,6 +189,7 @@ public class KonumKaydetme {
         MobileElement popupKonumTeyit = driver.findElement(By.id("com.pozitron.hepsiburada:id/tvTitle"));
         String popup = popupKonumTeyit.getText();
         System.out.println("popup = " + popup);
+        Utilities.waitFor(1);
         Assert.assertEquals(popup, "Konumunuz kaydedildi.");
     }
     @Given("Tab bar uzerinden kategoriler tabına tikladim")
@@ -260,6 +264,7 @@ public class KonumKaydetme {
 
         Utilities.waitFor(2);
         MobileElement tamAdres = driver.findElement(By.id("com.pozitron.hepsiburada:id/deliveryTown"));
+        Utilities.waitFor(2);
         tamAdresText = tamAdres.getText();
         System.out.println("tamAdresText = " + tamAdresText);
         Utilities.waitFor(1);
