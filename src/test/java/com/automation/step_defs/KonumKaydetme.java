@@ -35,6 +35,7 @@ public class KonumKaydetme {
     static String ilAdi;
     static String ilceAdi;
     static String mahalleAdi;
+    static String tamAdresText;
 
     int upperBound;
     int random;
@@ -82,14 +83,20 @@ public class KonumKaydetme {
     @When("Konum alanina tikladim")
     public void konum_alanina_tikladim() {
 
-        MobileElement konum = driver.findElement(By.id("com.pozitron.hepsiburada:id/imageViewIcon"));
-        System.out.println("konum before click = " + konum.getText());
-        Utilities.waitFor(1);
-        try {konum.click();}
+        MobileElement konum;
+
+        try {
+            konum = driver.findElement(By.id("com.pozitron.hepsiburada:id/imageViewIcon"));
+            Utilities.waitFor(1);
+            konum.click();
+            System.out.println("TRY konum clicked ");
+        }
         catch (Exception e){
             driver.navigate().back();
             Utilities.waitFor(1);
+            konum = driver.findElement(By.id("com.pozitron.hepsiburada:id/imageViewIcon"));
             konum.click();
+            System.out.println("CATCH konum clicked ");
             e.printStackTrace();
         }
         Utilities.waitFor(2);
@@ -98,13 +105,15 @@ public class KonumKaydetme {
 
     @When("il sectim")
     public void il_sectim() {
+
         MobileElement il = driver.findElement(By.xpath("//android.widget.ImageView[@content-desc=\"İl seçin\"]"));
         System.out.println("il.getText() = " + il.getText());
+        Utilities.waitFor(1);
         il.click();
         Utilities.waitFor(1);
         List<MobileElement> ilList = driver.findElements(By.id("com.pozitron.hepsiburada:id/tvOneProvinceSelectBox"));
-        System.out.println("ilList.get(1) = " + ilList.get(1));
         upperBound = ilList.size();
+        System.out.println("ilList.size() = " + upperBound);
         random = (int) (Math.random() * upperBound);
         Utilities.waitFor(1);
         ilAdi = ilList.get(random).getText();
@@ -117,10 +126,12 @@ public class KonumKaydetme {
     @When("ilce sectim")
     public void ilce_sectim() {
         MobileElement ilce = driver.findElement(By.xpath("//android.widget.ImageView[@content-desc=\"İlçe seçin\"]"));
+        Utilities.waitFor(1);
         ilce.click();
         Utilities.waitFor(1);
         List<MobileElement> ilceList = driver.findElements(By.id("com.pozitron.hepsiburada:id/tvOneProvinceSelectBox"));
         upperBound = ilceList.size();
+        System.out.println("ilceList.size() = " + ilceList.size());
         random = (int) (Math.random() * upperBound);
         Utilities.waitFor(1);
         ilceAdi = ilceList.get(random).getText();
@@ -133,10 +144,12 @@ public class KonumKaydetme {
     @When("mahallle sectim")
     public void mahallle_sectim(){
         MobileElement mahalle = driver.findElement(By.xpath("//android.widget.ImageView[@content-desc=\"Mahalle seçin\"]"));
+        Utilities.waitFor(1);
         mahalle.click();
         Utilities.waitFor(1);
         List<MobileElement> mahalleList = driver.findElements(By.id("com.pozitron.hepsiburada:id/tvOneProvinceSelectBox"));
         upperBound = mahalleList.size();
+        System.out.println("mahalleList.size() = " + mahalleList.size());
         random = (int) (Math.random() * upperBound);
         Utilities.waitFor(1);
         mahalleAdi = mahalleList.get(random).getText();
@@ -149,7 +162,19 @@ public class KonumKaydetme {
     @When("Kaydet butonuna tikladim")
     public void kaydet_butonuna_tikladim() throws InterruptedException {
         MobileElement kaydetButon = driver.findElement(By.id("com.pozitron.hepsiburada:id/button"));
-        kaydetButon.click();
+        Utilities.waitFor(1);
+        try {
+            kaydetButon.click();
+            System.out.println("TRY kaydetButon clicked ");
+        }
+        catch (Exception e){
+            driver.navigate().back();
+            Utilities.waitFor(1);
+            kaydetButon = driver.findElement(By.id("com.pozitron.hepsiburada:id/button"));
+            kaydetButon.click();
+            System.out.println("CATCH kaydetButon clicked ");
+            e.printStackTrace();
+        }
         Thread.sleep(500);
     }
 
@@ -162,26 +187,74 @@ public class KonumKaydetme {
     }
     @Given("Tab bar uzerinden kategoriler tabına tikladim")
     public void tab_bar_uzerinden_kategoriler_tabına_tikladim() {
-        Utilities.waitFor(1);
-        MobileElement kategorilerim = driver.findElement(By.id("Kategorilerim"));
-        kategorilerim.click();
+        Utilities.waitFor(3);
+        MobileElement kategorilerim;
+        try {
+            kategorilerim = driver.findElement(By.xpath("//android.widget.FrameLayout[@content-desc=\"Kategorilerim\"]"));
+            Utilities.waitFor(1);
+            kategorilerim.click();
+            System.out.println("TRY kategorilerim.getText() = " + kategorilerim.getText());
+
+        }
+        catch (Exception e){
+            driver.navigate().back();
+            Utilities.waitFor(1);
+            kategorilerim = driver.findElement(By.xpath("//android.widget.FrameLayout[@content-desc=\"Kategorilerim\"]"));
+            kategorilerim.click();
+            System.out.println("CATCH kategorilerim.getText() = " + kategorilerim.getText());
+            e.printStackTrace();
+        }
         Utilities.waitFor(2);
     }
 
     @When("Bir kategori sectim")
     public void bir_kategori_sectim() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Utilities.waitFor(2);
+        List<MobileElement> listKategoriler = driver.findElements(By.id("com.pozitron.hepsiburada:id/textViewItem"));
+        Utilities.waitFor(2);
+        upperBound = listKategoriler.size();
+        System.out.println("listKategoriler.size() = " + listKategoriler.size());
+        while(upperBound == 0) {
+            driver.navigate().back();
+            Utilities.waitFor(1);
+            listKategoriler = driver.findElements(By.id("com.pozitron.hepsiburada:id/textViewItem"));
+            upperBound = listKategoriler.size();
+        }
+        random = (int) (Math.random() * upperBound);
+        Utilities.waitFor(1);
+        listKategoriler.get(random).click();
+        System.out.println("kategori = " + listKategoriler.get(random).getText());
+        Utilities.waitFor(2);
     }
     @When("Yarin Kapinda alanindaki il bilgisini kaydettim")
     public void yarin_kapinda_alanindaki_il_bilgisini_kaydettim() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        MobileElement expressTeslimatButon;
+        try {
+            expressTeslimatButon = driver.findElement(By.xpath("//android.widget.FrameLayout[@content-desc=\"Express Teslimat\"]/android.widget.FrameLayout/android.widget.ImageView"));
+            Utilities.waitFor(1);
+            expressTeslimatButon.click();
+            System.out.println(" TRY expressTeslimatButon.click() " );
+        }
+        catch (Exception e){
+            driver.navigate().back();
+            Utilities.waitFor(1);
+            expressTeslimatButon = driver.findElement(By.xpath("//android.widget.FrameLayout[@content-desc=\"Express Teslimat\"]/android.view.ViewGroup/android.widget.TextView"));
+            Utilities.waitFor(1);
+            expressTeslimatButon.click();
+            System.out.println(" CATCH expressTeslimatButon.click() " );
+            e.printStackTrace();
+        }
+
+        Utilities.waitFor(2);
+        MobileElement tamAdres = driver.findElement(By.id("com.pozitron.hepsiburada:id/deliveryTown"));
+        tamAdresText = tamAdres.getText();
+        System.out.println("tamAdresText = " + tamAdresText);
+        Utilities.waitFor(1);
+
     }
 
     @Then("Anasayfada secilen il bilgisi ile Yarin Kapinda alanindaki il bilgisinin ayni oldugunu dogruladim")
     public void anasayfada_secilen_il_bilgisi_ile_yarin_kapinda_alanindaki_il_bilgisinin_ayni_oldugunu_dogruladim() {
-        // Write code here that turns the phrase above into concrete actions
-        throw new io.cucumber.java.PendingException();
+        Assert.assertEquals(ilAdi, tamAdresText);
     }
 }
